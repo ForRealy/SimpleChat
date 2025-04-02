@@ -1,5 +1,6 @@
 target/
-src/main/resources/
+
+/simplechat-5f219-firebase-adminsdk-fbsvc-1ab4ce8f81
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple Chat</title>
+    <style>
+        body {
+          font-family: Arial, sans-serif;
+          padding: 20px;
+        }
+        #messages {
+          height: 300px;
+          overflow-y: scroll;
+          border: 1px solid #ccc;
+          padding: 10px;
+          margin-bottom: 10px;
+        }
+        textarea {
+          width: 100%;
+          padding: 10px;
+          font-size: 16px;
+        }
+        button {
+          padding: 10px 20px;
+          font-size: 16px;
+          margin-top: 10px;
+        }
+        #userNickname {
+          font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<h1>Simple Chat</h1>
+<!-- Mostrar el nickname escogido -->
+<p id="userNickname"></p>
+
+<!-- Mostrar mensajes -->
+<div id="messages"></div>
+
+<!-- Campo para ingresar mensajes -->
+<textarea id="message" placeholder="Escribe tu mensaje..." rows="4"></textarea>
+<button id="sendBtn">Enviar</button>
+
+<script type="module">
+    // Importar los módulos de Firebase
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
+    import { getDatabase, ref, push, query, limitToLast, onValue } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js';
+
+    // Configuración de Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyCwPvv5PVxe6Wc2Wx80XcWUvQeHeiKFPWA",
+      authDomain: "simplechat-5f219.firebaseapp.com",
+      databaseURL: "https://simplechat-5f219-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "simplechat-5f219",
+      storageBucket: "simplechat-5f219.firebasestorage.app",
+      messagingSenderId: "48981578696",
+      appId: "1:48981578696:web:c6c7b0dcab02e1e9b766fd",
+      measurementId: "G-J6W8X4XFDV"
+    };
+
+    // Inicializar Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+    const messagesRef = ref(database, 'messages');
+
+    // Crear una consulta que solo obtenga los 10 últimos mensajes
+    const lastMessagesQuery = query(messagesRef, limitToLast(10));
+
+    // Recuperar el nickname almacenado
+    const nickname = localStorage.getItem("nickname") || "Anónimo";
+    document.getElementById("userNickname").textContent = "Tu nickname: " + nickname;
+
+    // Función para enviar un mensaje
+    function sendMessage() {
+      const message = document.getElementById("message").value.trim();
+      if (message) {
+        // Agregar el mensaje a Firebase
+        push(messagesRef, {
+          username: nickname,
+          text: message
+        });
+        // Limpiar el campo de mensaje
+        document.getElementById("message").value = "";
+      } else {
+        alert("Por favor, escribe un mensaje antes de enviar.");
+      }
+    }
+
+    // Asignar la función sendMessage al botón
+    document.getElementById("sendBtn").addEventListener("click", sendMessage);
+
+    // Cargar y actualizar los mensajes utilizando la consulta de los 10 últimos
+    onValue(lastMessagesQuery, (snapshot) => {
+      const messagesDiv = document.getElementById("messages");
+      messagesDiv.innerHTML = ''; // Limpiar mensajes anteriores
+      snapshot.forEach((childSnapshot) => {
+        const msg = childSnapshot.val();
+        let messageText = (msg.username && msg.text) ? `${msg.username}: ${msg.text}` : msg;
+        const p = document.createElement("p");
+        p.textContent = messageText;
+        messagesDiv.appendChild(p);
+      });
+      // Hacer scroll hacia abajo para mostrar el último mensaje
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    });
+</script>
+</body>
+</html>
