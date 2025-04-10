@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-container {
+            text-align: center;
+        }
+        #nickname {
+            padding: 10px;
+            font-size: 16px;
+            width: 200px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <h1>¿Cómo te quieres llamar?</h1>
+    <input type="text" id="nickname" placeholder="Ingresa tu nombre..." />
+    <br>
+    <button onclick="startChat()">Entrar al Chat</button>
+</div>
+
+<script>
+    function startChat() {
+        const nickname = document.getElementById("nickname").value.trim();
+        if (nickname) {
+            localStorage.setItem("nickname", nickname); 
+            window.location.href = "chat.html"; 
+        } else {
+            alert("Por favor, ingresa un nombre.");
+        }
+    }
+</script>
+
+</body>
+</html>

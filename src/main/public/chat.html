@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Chat</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<h1>Simple Chat</h1>
+
+<!-- Mostrar el nickname del usuario -->
+<p id="userNickname"></p>
+
+<!-- Mostrar mensajes -->
+<div id="messages"></div>
+
+<!-- Entrada de mensajes -->
+<textarea id="message" placeholder="Escribe tu mensaje..." rows="4"></textarea>
+<button id="sendBtn">Enviar</button>
+
+<!-- Botón Modo Fiesta -->
+<button id="partyModeBtn">Modo Fiesta 🎉</button>
+
+<!-- Contenedor de globos -->
+<div id="balloonContainer"></div>
+
+<!-- Barra de carga -->
+<div id="progressContainer">
+    <div id="progressBar"></div>
+</div>
+
+<script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
+    import { getDatabase, ref, push, onChildAdded, get } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js';
+
+    const firebaseConfig = {
+        apiKey: "apikey_here",
+        authDomain: "simplechat-5f219.firebaseapp.com",
+        databaseURL: "https://simplechat-5f219-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "simplechat-5f219",
+        storageBucket: "simplechat-5f219.firebasestorage.app",
+        messagingSenderId: "48981578696",
+        appId: "1:48981578696:web:c6c7b0dcab02e1e9b766fd",
+        measurementId: "G-J6W8X4XFDV"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+    const messagesRef = ref(database, 'messages');
+
+    // Obtener el nickname desde localStorage
+    const nickname = localStorage.getItem("nickname") || "Anónimo";
+    document.getElementById("userNickname").textContent = `Tu nombre: ${nickname}`;
+
+    // Función para obtener o generar el color del usuario
+    function getUserColor(username) {
+        let color = localStorage.getItem(`userColor_${username}`);
+
+        if (!color) {
+            color = `hsl(${Math.random() * 360}, 70%, 50%)`;
+            localStorage.setItem(`userColor_${username}`, color);
+        }
+        return color;
+    }
+
+    function sendMessage() {
+        const message = document.getElementById("message").value.trim();
+
+        if (message) {
+            push(messagesRef, { username: nickname, text: message });
+            document.getElementById("message").value = "";
+        } else {
+            alert("Por favor, escribe un mensaje antes de enviar.");
+        }
+    }
+
+    document.getElementById("sendBtn").addEventListener("click", sendMessage);
+
+    function loadMessages() {
+        get(messagesRef).then(snapshot => {
+            if (snapshot.exists()) {
+                document.getElementById("messages").innerHTML = '';
+                snapshot.forEach(childSnapshot => {
+                    const message = childSnapshot.val();
+                    displayMessage(message.username, message.text);
+                });
+            }
+        }).catch(error => console.error("Error al cargar mensajes:", error));
+    }
+
+    loadMessages();
+
+    function displayMessage(username, text) {
+        const messageElement = document.createElement("p");
+
+        const nameSpan = document.createElement("span");
+        nameSpan.textContent = username + ": ";
+        nameSpan.classList.add("message-username");
+        nameSpan.style.color = getUserColor(username);  // Usar el color guardado
+
+        const textSpan = document.createElement("span");
+        textSpan.textContent = text;
+
+        messageElement.appendChild(nameSpan);
+        messageElement.appendChild(textSpan);
+
+        document.getElementById("messages").appendChild(messageElement);
+        document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
+    }
+
+    onChildAdded(messagesRef, snapshot => {
+        const message = snapshot.val();
+        displayMessage(message.username, message.text);
+    });
+
+    // Función para activar el modo fiesta
+function activatePartyMode() {
+    let partyTimer;
+    let balloonInterval;
+    let balloonCount = 0; // Contador de globos
+
+    // Cambiar el fondo de la página a un color aleatorio constantemente
+    const colorChangeInterval = setInterval(() => {
+        document.body.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 75%)`;
+    }, 1000); // Cambiar el color cada segundo
+
+    // Crear y soltar globos con un intervalo discontinúo
+    balloonInterval = setInterval(() => {
+        if (balloonCount < 15) { // Solo crear globos si no se han creado 15
+            createBalloon();
+            balloonCount++; // Incrementar el contador de globos
+        } else {
+            clearInterval(balloonInterval); // Detener la creación de globos
+        }
+    }, 500); // Crear un globo cada 500ms
+
+    // Desactivar el botón de Modo Fiesta
+    document.getElementById("partyModeBtn").disabled = true;
+
+    // Detener el modo fiesta después de 10 segundos
+    partyTimer = setTimeout(() => {
+        clearInterval(colorChangeInterval); // Detener el cambio de color
+        clearInterval(balloonInterval); // Detener la creación de globos
+
+        // Iniciar la barra de progreso
+        startProgressBar();
+
+    }, 10000); // 10 segundos
+
+    // Después de 10 segundos, restaurar el fondo
+    setTimeout(() => {
+        document.body.style.backgroundColor = ""; // Restaurar el color original del fondo
+    }, 10000); // 10 segundos
+}
+
+
+    // Crear un globo
+    function createBalloon() {
+        const balloon = document.createElement("div");
+        balloon.classList.add("balloon");
+
+        // Establecer una posición aleatoria para el globo
+        balloon.style.left = `${Math.random() * 100}%`;
+
+        // Agregar el globo al contenedor
+        document.getElementById("balloonContainer").appendChild(balloon);
+
+        // Eliminar el globo después de que termine la animación
+        setTimeout(() => {
+            balloon.remove();
+        }, 4000); // 4 segundos, el tiempo de caída
+    }
+
+    // Iniciar la barra de progreso
+    function startProgressBar() {
+        const progressBar = document.getElementById("progressBar");
+        let width = 0;
+
+        // Mostrar la barra de carga
+        document.getElementById("progressContainer").style.display = "block";
+
+        // Recargar la barra durante 30 segundos
+        const progressInterval = setInterval(() => {
+            width += 100 / 30; // Dividir el 100% en 30 segundos
+            progressBar.style.width = `${width}%`;
+
+            if (width >= 100) {
+                clearInterval(progressInterval);
+                // Habilitar nuevamente el botón después de 30 segundos
+                document.getElementById("partyModeBtn").disabled = false;
+                document.getElementById("progressContainer").style.display = "none"; // Ocultar la barra
+            }
+        }, 1000); // Actualizar cada segundo
+    }
+
+    // Activar el modo fiesta cuando se hace clic en el botón
+    document.getElementById("partyModeBtn").addEventListener("click", activatePartyMode);
+
+</script>
+
+</body>
+</html>
