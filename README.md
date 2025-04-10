@@ -2,8 +2,6 @@
 
 Aplicación de chat simple que permite comunicación en tiempo real utilizando Firebase. Incluye funciones como nicknames personalizados, historial de mensajes y un divertido "Modo Fiesta" con efectos visuales.
 
-![Demo del Chat](URL_DE_EJEMPLO_DEMO.gif)
-
 ## Características Principales
 - 🧑💻 Nicknames personalizados
 - 🔥 Mensajería en tiempo real con Firebase
