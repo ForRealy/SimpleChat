@@ -13,7 +13,8 @@ Aplicación de chat simple que permite comunicación en tiempo real utilizando F
 - 📜 Historial de últimos 10 mensajes
 
 ## Estructura del Proyecto
-`project/
+```
+project/
 ├── src/
 │ ├── main/
 │ │ ├── java/org/example/
@@ -27,3 +28,4 @@ Aplicación de chat simple que permite comunicación en tiempo real utilizando F
 │ ├── chat.html // Interfaz de chat
 │ ├── login.html // Página de login
 │ └── style.css // Estilos CSS`
+```
