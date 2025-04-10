@@ -13,3 +13,17 @@ Aplicación de chat simple que permite comunicación en tiempo real utilizando F
 - 📜 Historial de últimos 10 mensajes
 
 ## Estructura del Proyecto
+`project/
+├── src/
+│ ├── main/
+│ │ ├── java/org/example/
+│ │ │ ├── ChatCommand.java // Manejo de comandos
+│ │ │ ├── ChatListener.java // Escucha mensajes
+│ │ │ ├── FirebaseConfig.java // Configuración Firebase
+│ │ │ └── Main.java // Punto de entrada
+│ │ └── resources/
+│ │ └── service-account.json // Credenciales Firebase
+├── web/
+│ ├── chat.html // Interfaz de chat
+│ ├── login.html // Página de login
+│ └── style.css // Estilos CSS`
