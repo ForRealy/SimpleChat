@@ -54,7 +54,7 @@ cp tu-archivo-credenciales.json src/main/resources/service-account.json
     <dependency>
         <groupId>com.google.firebase</groupId>
         <artifactId>firebase-admin</artifactId>
-        <version>9.1.1</version>
+        <version>9.2.0</version>
     </dependency>
 </dependencies>
 ```
