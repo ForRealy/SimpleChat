@@ -47,6 +47,7 @@ project/
 ```bash
 mkdir -p src/main/resources
 cp tu-archivo-credenciales.json src/main/resources/service-account.json
+```
 
 ```
 <dependencies>
