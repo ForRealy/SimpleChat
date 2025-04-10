@@ -67,12 +67,41 @@ Al activarlo:
 - Barra de progreso para recarga (30 segundos)
 ```
 function activatePartyMode() {
-    // Efectos visuales
-    setInterval(() => {
+    let partyTimer;
+    let balloonInterval;
+    let balloonCount = 0; // Contador de globos
+
+    // Cambiar el fondo de la página a un color aleatorio constantemente
+    const colorChangeInterval = setInterval(() => {
         document.body.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 75%)`;
-    }, 1000);
-    
-    // Animación de globos
-    createBalloon(); // Crea globos con posición aleatoria
+    }, 1000); // Cambiar el color cada segundo
+
+    // Crear y soltar globos con un intervalo discontinúo
+    balloonInterval = setInterval(() => {
+        if (balloonCount < 15) { // Solo crear globos si no se han creado 15
+            createBalloon();
+            balloonCount++; // Incrementar el contador de globos
+        } else {
+            clearInterval(balloonInterval); // Detener la creación de globos
+        }
+    }, 500); // Crear un globo cada 500ms
+
+    // Desactivar el botón de Modo Fiesta
+    document.getElementById("partyModeBtn").disabled = true;
+
+    // Detener el modo fiesta después de 10 segundos
+    partyTimer = setTimeout(() => {
+        clearInterval(colorChangeInterval); // Detener el cambio de color
+        clearInterval(balloonInterval); // Detener la creación de globos
+
+        // Iniciar la barra de progreso
+        startProgressBar();
+
+    }, 10000); // 10 segundos
+
+    // Después de 10 segundos, restaurar el fondo
+    setTimeout(() => {
+        document.body.style.backgroundColor = ""; // Restaurar el color original del fondo
+    }, 10000); // 10 segundos
 }
 ```
