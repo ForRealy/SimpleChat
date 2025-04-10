@@ -27,5 +27,33 @@ project/
 ├── web/
 │ ├── chat.html // Interfaz de chat
 │ ├── login.html // Página de login
-│ └── style.css // Estilos CSS`
+│ └── style.css // Estilos CSS
+```
+
+## Requisitos Previos
+- Java JDK 11+
+- Maven
+- Cuenta en Firebase
+
+## Configuración Inicial
+
+1. **Firebase Setup:**
+   - Crea un proyecto en [Firebase Console](https://console.firebase.google.com/)
+   - Habilitar **Realtime Database**
+   - Generar archivo de credenciales (`service-account.json`) en:
+   `Firebase Console > Configuración del proyecto > Cuentas de servicio`
+
+2. **Configuración de Credenciales:**
+```bash
+mkdir -p src/main/resources
+cp tu-archivo-credenciales.json src/main/resources/service-account.json
+
+```
+<dependencies>
+    <dependency>
+        <groupId>com.google.firebase</groupId>
+        <artifactId>firebase-admin</artifactId>
+        <version>9.1.1</version>
+    </dependency>
+</dependencies>
 ```
