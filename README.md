@@ -58,3 +58,21 @@ cp tu-archivo-credenciales.json src/main/resources/service-account.json
     </dependency>
 </dependencies>
 ```
+
+Modo Fiesta 🎉
+
+Al activarlo:
+-Cambios de color de fondo aleatorios
+-Lluvia de globos animados
+-Barra de progreso para recarga (30 segundos)
+``
+function activatePartyMode() {
+    // Efectos visuales
+    setInterval(() => {
+        document.body.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 75%)`;
+    }, 1000);
+    
+    // Animación de globos
+    createBalloon(); // Crea globos con posición aleatoria
+}
+``
